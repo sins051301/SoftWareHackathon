@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { usePostGroup } from "@/hooks/queries/group.query";
 import LoadingSpinner from "@/components/LoadingSpinner";
+
+
 // Styled Components
 const Container = styled.div`
-  max-width: 600px;
+  max-width: 1024px;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
@@ -17,70 +19,95 @@ const Title = styled.h1`
   margin-bottom: 20px;
 `;
 
-const Form = styled.div`
-  background: #fff;
-  border: 1px solid #ddd;
+const FormContainer = styled.div`
+  display: flex;
+  gap: 20px;
+`;
+
+const LeftSection = styled.div`
+  flex: 3;
+  background-color: #fff;
+  border: 1px solid #D8D8D8;
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 `;
 
-const Input = styled.input`
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  background: #f9f9f9;
-  box-sizing: border-box;
-`;
-
-// const Row = styled.div`
-//   display: flex;
-//   gap: 10px;
-//   margin-bottom: 15px;
-// `;
-
-const Select = styled.select`
+const RightSection = styled.div`
   flex: 1;
-  padding: 10px;
-  border: 1px solid #ddd;
+  background-color: #fff;
+  border: 1px solid #D8D8D8;
   border-radius: 8px;
-  font-size: 14px;
-  background: #f9f9f9;
-  box-sizing: border-box;
+  padding: 20px;
+`;
+
+const InputGroup = styled.div`
+  margin-bottom: 20px;
 `;
 
 const Label = styled.label`
-  font-size: 14px;
-  font-weight: bold;
   display: block;
+  font-size: 20px;
+  font-weight: 600;
   margin-bottom: 8px;
+
+  &.essential::after {
+    content: " *";
+    color: hotpink;
+  }
 `;
 
-const TextArea = styled.textarea`
+const Input = styled.input`
+  box-sizing: border-box;
   width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 14px;
-  background: #f9f9f9;
+  background-color: #f9f9f9;
+`;
+
+const TextArea = styled.textarea`
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #f9f9f9;
   resize: none;
   height: 100px;
-  box-sizing: border-box;
+`;
+
+const SelectGroup = styled.div`
+  margin-bottom: 20px;
+`;
+
+const Select = styled.select`
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #f9f9f9;
 `;
 
 const SubmitButton = styled.button`
-  background: #333;
+  margin-top: 20px;
+  padding: 15px 20px;
+  background-color: #007bff;
   color: #fff;
+  font-size: 16px;
   border: none;
   border-radius: 8px;
-  padding: 10px;
-  font-size: 16px;
   cursor: pointer;
-  width: 100%;
+  display: block;
+  margin-left: auto;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
+
 
 const CreateGroup = () => {
   const navigate = useNavigate();
@@ -97,7 +124,7 @@ const CreateGroup = () => {
   function handleSubmit() {
     mutate({
       name: name,
-      isOpen: isPublicString === "true" ? true : false,
+      isOpen: isPublicString === "true",
       explain: descriptions,
       password: password,
     });
@@ -108,44 +135,45 @@ const CreateGroup = () => {
   return (
     <Container>
       <Title>클래스 만들기</Title>
-      <Form>
-        <Input
-          type="text"
-          placeholder="클래스 이름"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+      <FormContainer>
+        <LeftSection>
+          <InputGroup>
+            <Label className='essential'>클래스 이름</Label>
+            <Input placeholder="클래스 이름을 정해주세요" value={name} onChange={e => setName(e.target.value)}/>
+          </InputGroup>
 
-        <Select
-          value={isPublicString}
-          onChange={(e) => setIsPublicString(e.target.value)}
-        >
-          <option value="true">전체 공개</option>
-          <option value="">비공개</option>
-        </Select>
+          <InputGroup>
+            <Label className='essential'>클래스 설명</Label>
+            <TextArea placeholder="클래스에 대한 설명을 적어주세요" value={descriptions} onChange={e => setDescriptions(e.target.value)}/>
+          </InputGroup>
 
-        {/*<Row>*/}
-        {/*  <Select>*/}
-        {/*    <option>학습 도우미 지정</option>*/}
-        {/*    <option>도우미 A</option>*/}
-        {/*    <option>도우미 B</option>*/}
-        {/*  </Select>*/}
-        {/*</Row>*/}
-        <Input
-          type="text"
-          placeholder="비밀번호"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <Label>클래스 설명</Label>
-        <TextArea
-          placeholder="클래스에 대한 설명을 입력하세요..."
-          value={descriptions}
-          onChange={(e) => setDescriptions(e.target.value)}
-        />
-      </Form>
-      <br />
-      <SubmitButton onClick={handleSubmit}>클래스 만들기</SubmitButton>
+          <InputGroup>
+            <Label>클래스 패스워드</Label>
+            <Input placeholder="패스워드를 입력해주세요" value={password} onChange={e => setPassword(e.target.value)}/>
+          </InputGroup>
+        </LeftSection>
+        <RightSection>
+          <SelectGroup>
+            <Label>AI 멘티 지능</Label>
+            <Select>
+              <option>옵션 1</option>
+              <option>옵션 2</option>
+            </Select>
+          </SelectGroup>
+          <SelectGroup>
+            <Label>공개범위</Label>
+            <Select value={isPublicString} onChange={e => setIsPublicString(e.target.value)}>
+              <option value='true'>전체 공개</option>
+              <option value=''>비공개</option>
+            </Select>
+          </SelectGroup>
+          <InputGroup>
+            <Label>멤버</Label>
+            <Input placeholder="멤버를 추가해주세요" />
+          </InputGroup>
+        </RightSection>
+      </FormContainer>
+      <SubmitButton onClick={handleSubmit}>✔ 클래스 만들기</SubmitButton>
     </Container>
   );
 };

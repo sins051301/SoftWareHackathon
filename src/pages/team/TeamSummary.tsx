@@ -1,3 +1,6 @@
+import { useGetMyGroupList } from "@/hooks/queries/group.query";
+import { getUserId } from "@/utils/auth";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const Content = styled.div`
@@ -16,15 +19,18 @@ const Content = styled.div`
 `;
 
 const TeamSummary = () => {
+  const id = getUserId() ?? "1";
+  const { teamId } = useParams();
+
+  const { data, isError, error } = useGetMyGroupList(id);
+
+  if (isError) {
+    return <p>{error?.message}</p>;
+  }
+  const filteredGroup = data?.find((item) => String(item.id) === teamId);
   return (
     <Content>
-      <p>
-        The training set should be used to build your machine learning models.
-        For the training set, we provide the outcome (also known as the “ground
-        truth”) for each passenger. Your model will be based on “features” like
-        passengers’ gender and class. You can also use{" "}
-        <a href="#">feature engineering</a> to create new features.
-      </p>
+      <p>{filteredGroup?.explain}</p>
     </Content>
   );
 };

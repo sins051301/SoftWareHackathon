@@ -14,9 +14,8 @@ import TeamSummary from "./pages/team/TeamSummary";
 import MyPage from "./pages/MyPage";
 import Chatting from "./pages/Chat/Chatting";
 import ReportPage from "./pages/ReportPage";
-import "./index.css";
-
-// Todo: Change TS setting
+import LoadingSpinner from "./components/LoadingSpinner.tsx";
+import { Suspense } from "react";
 
 const router = createBrowserRouter([
   { path: "login", element: <Login />, errorElement: <NotFound /> },
@@ -48,7 +47,9 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      <Suspense fallback={<LoadingSpinner />}>
+        <RouterProvider router={router} />
+      </Suspense>
     </QueryClientProvider>
   );
 };

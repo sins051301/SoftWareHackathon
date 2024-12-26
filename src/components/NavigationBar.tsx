@@ -2,40 +2,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import { NavLink, useParams } from "react-router-dom";
 
-const NavItemUrls = [
-  { name: "overview", url: "" },
-  { name: "members", url: "/member" },
-  { name: "chatting", url: "/chatting" },
-  { name: "leaderboard", url: "/leaderboard" },
-];
-
-const NavigationBar = () => {
-  const [activeTab, setActiveTab] = useState(NavItemUrls[0].url);
-  const params = useParams();
-  const TeamUrl = "/team/" + params.teamId;
-
-  return (
-    <NavContainer>
-      {NavItemUrls.map(
-        (item) => (
-          <NavItem
-            to={TeamUrl + item.url}
-            className={({ isActive }) => (isActive ? "active" : "")}
-            onClick={() => setActiveTab(item.name)}
-          >
-            {item.name}
-          </NavItem>
-        ),
-        []
-      )}
-
-      <ActiveIndicator activeTab={activeTab} />
-    </NavContainer>
-  );
-};
-
-export default NavigationBar;
-
 // Styled Components
 const NavContainer = styled.div`
   display: flex;
@@ -77,3 +43,38 @@ const ActiveIndicator = styled.div<ActiveIndicatorProps>`
       ? "translateX(100%)"
       : "translateX(200%)"};
 `;
+
+const NavItemUrls = [
+  { name: "overview", url: "" },
+  { name: "members", url: "/member" },
+  { name: "chatting", url: "/chatting" },
+  { name: "leaderboard", url: "/leaderboard" },
+];
+
+const NavigationBar = () => {
+  const [activeTab, setActiveTab] = useState(NavItemUrls[0].url);
+  const params = useParams();
+  const TeamUrl = "/team/" + params.teamId;
+
+  return (
+    <NavContainer>
+      {NavItemUrls.map(
+        (item) => (
+          <NavItem
+            key={item.name}
+            to={TeamUrl + item.url}
+            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={() => setActiveTab(item.name)}
+          >
+            {item.name}
+          </NavItem>
+        ),
+        []
+      )}
+
+      <ActiveIndicator activeTab={activeTab} />
+    </NavContainer>
+  );
+};
+
+export default NavigationBar;

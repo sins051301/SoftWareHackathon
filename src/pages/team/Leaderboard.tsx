@@ -2,6 +2,10 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useGetLeaderBoard } from "@/hooks/queries/leader.query";
+import Bronze from "@/assets/tier/bronze.svg?react";
+import Silver from "@/assets/tier/silver.svg?react";
+import Gold from "@/assets/tier/gold.svg?react";
+import Diamond from "@/assets/tier/diamond.svg?react";
 
 // Styled Components
 const Container = styled.div`
@@ -50,13 +54,6 @@ const Profile = styled.div`
   gap: 10px;
 `;
 
-const Avatar = styled.div`
-  width: 20px;
-  height: 20px;
-  background-color: #ddd;
-  border-radius: 50%;
-`;
-
 const ScoreBadge = styled.span`
   padding: 5px 10px;
   border-radius: 15px;
@@ -69,39 +66,59 @@ const RankingPage = () => {
   const { teamId } = useParams();
 
   const { data } = useGetLeaderBoard(teamId);
+
   console.log("leader", data);
   const filteredRankings = data.filter((ranking) =>
     ranking.userName.includes(search)
   );
 
+  // 아이콘 선택 함수
+  const getGradeIcon = (grade: string) => {
+    switch (grade) {
+      case "브론즈":
+        return <Bronze />;
+      case "실버":
+        return <Silver />;
+      case "골드":
+        return <Gold />;
+      case "다이아몬드":
+        return <Diamond />;
+      default:
+        return null;
+    }
+  };
+
   return (
     <Container>
-      <SearchInput type="text" placeholder="이름 검색하기" value={search} onChange={e => setSearch(e.target.value)}/>
+      <SearchInput
+        type="text"
+        placeholder="이름 검색하기"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
       <Table>
         <thead>
-        <TableRow>
-          <TableHeader>순위</TableHeader>
-          <TableHeader>이름</TableHeader>
-          <TableHeader>점수</TableHeader>
-        </TableRow>
+          <TableRow>
+            <TableHeader>순위</TableHeader>
+            <TableHeader>이름</TableHeader>
+            <TableHeader>점수</TableHeader>
+          </TableRow>
         </thead>
         <tbody>
-        {/*grade 처리 잘 하기*/}
-        {filteredRankings.map((ranking, index) => (
-          <TableRow key={ranking.id}>
-            <TableData>{index + 1}</TableData>
-            <TableData>
-              <Profile>
-                <Avatar/>
-                {ranking.userName}
-              </Profile>
-            </TableData>
-            <TableData>
-              <ScoreBadge>{ranking.point}</ScoreBadge>
-            </TableData>
-          </TableRow>
-        ), [])}
-
+          {filteredRankings.map((ranking, index) => (
+            <TableRow key={ranking.id}>
+              <TableData>{index + 1}</TableData>
+              <TableData>
+                <Profile>
+                  {getGradeIcon(ranking.grade)}
+                  {ranking.userName}
+                </Profile>
+              </TableData>
+              <TableData>
+                <ScoreBadge>{ranking.point}</ScoreBadge>
+              </TableData>
+            </TableRow>
+          ))}
         </tbody>
       </Table>
     </Container>
