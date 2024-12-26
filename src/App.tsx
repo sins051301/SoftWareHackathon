@@ -1,19 +1,31 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFound from "./pages/NotFound";
 import { MainLayout } from "./layouts/MainLayout";
-import Test from "./pages/Test";
-
+import Chatting from "./pages/Chat/Chatting";
+import Login from "./pages/Auth/Login";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./services/TanstackQueryStore";
 const router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
     errorElement: <NotFound />,
-    children: [{ path: "test", element: <Test /> }],
+    children: [
+      { path: "chatting", element: <Chatting /> },
+      {
+        path: "login",
+        element: <Login />,
+      },
+    ],
   },
 ]);
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 };
 
 export default App;

@@ -17,4 +17,14 @@ export default defineConfig({
       "@": "/src",
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://3.38.176.228:8080",
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+      },
+    },
+  },
 });
