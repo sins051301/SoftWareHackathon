@@ -1,11 +1,25 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet } from "react-router-dom";
+import styled from "styled-components";
+import SideBar from "@/components/SideBar";
+
+const MainBack = styled.div`
+  width: 80vw;
+  height: 100vh;
+  padding: 5%;
+`;
+
+const Layout = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 export const MainLayout = () => {
   return (
-    <div className="bg-gray-100 flex h-screen w-screen flex-col items-center justify-center">
-      <div className="relative h-full w-full max-w-[400px] overflow-scroll rounded-lg bg-white p-6 shadow-md [&::-webkit-scrollbar]:hidden">
+    <Layout>
+      <SideBar />
+      <MainBack>
         <Outlet />
-      </div>
-    </div>
+      </MainBack>
+    </Layout>
   );
 };
