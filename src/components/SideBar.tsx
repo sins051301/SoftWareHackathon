@@ -1,98 +1,188 @@
-import styled from "styled-components";
-import Spacing from "./Spacing";
-const SideBack = styled.div`
-  width: 20vw;
-  background-color: gray;
+import {useState} from 'react';
+import {Link, NavLink} from 'react-router-dom';
+import styled from 'styled-components';
+
+
+// Styled Components
+const Container = styled.div`
+  box-sizing: border-box;
+  width: 240px;
+  height: 100vh;
   display: flex;
+  position: sticky;
+  left: 0;
+  top: 0;
   flex-direction: column;
+  justify-content: space-between;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  padding: 20px;
+`;
+
+const Title = styled.h1`
+  font-size: 32px;
+  font-weight: 900;
+  padding-left: 10px;
+  margin-bottom: 60px;
+`;
+
+const MenuItem = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  padding: 10px 0;
+  cursor: pointer;
+
+  &:hover {
+    color: #007bff;
+  }
+`;
+
+const Icon = styled.div`
+  width: 20px;
+  height: 20px;
+  background-color: #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+`;
+
+const Divider = styled.hr`
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
+`;
+
+const SubMenu = styled.div``;
+
+const DropdownIndicator = styled.span`
+  margin-left: auto;
+  font-size: 14px;
+  color: #666;
+`;
+
+const SubmenuItems = styled.div`
+  margin-left: 30px;
+  margin-top: 10px;
+`;
+
+const SubmenuItem = styled.div`
+  font-size: 14px;
+  padding: 5px 0;
+
+  &:hover {
+    color: #007bff;
+  }
+`;
+
+const UserInfo = styled.div`
+  display: flex;
   align-items: center;
 `;
 
-const Head = styled.h1`
-  font-weight: bold;
-  font-size: 2rem;
-  text-align: center;
-`;
-
-const Control = styled.div`
-  border-bottom: 1px solid black;
-  width: 90%;
-  display: flex;
-  flex-direction: column;
-  padding: 3%;
-`;
-
-const ControlItem = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  float: left;
-  width: 90%;
-`;
-
-const ControlButton = styled.button`
-  font-weight: bold;
-  width: 90%;
-  background-color: transparent;
-  border: none;
-  text-align: left;
-`;
-
-const Select = styled.select`
-  position: relative;
-  font-weight: bold;
-  font-size: 5px;
-  background-color: transparent;
-  height: 50px;
-  width: 200px;
-  border: none;
-`;
-
-const Label = styled.label`
-  position: absolute;
-  z-index: 1000;
-  font-weight: bold;
-  font-size: 15px;
-  background-color: transparent;
-
+const UserIcon = styled.div`
+  width: 40px;
   height: 40px;
-  border: none;
+  background-color: #ddd;
+  border-radius: 50%;
+  margin-right: 10px;
 `;
 
-function SideBar() {
-  return (
-    <SideBack>
-      <Head>Teach me</Head>
-      <Spacing size={3} />
-      <Control>
-        <ControlItem>
-          <div>f</div>
-          <ControlButton>홈</ControlButton>
-        </ControlItem>
-        <ControlItem>
-          <div>f</div>
-          <ControlButton>둘러보기</ControlButton>
-        </ControlItem>
-        <ControlItem>
-          <div>f</div>
-          <ControlButton>랭킹</ControlButton>
-        </ControlItem>
-        <ControlItem>
-          <div>f</div>
-          <ControlButton>내 정보</ControlButton>
-        </ControlItem>
-      </Control>
-      <ControlItem>
-        <Label htmlFor="team">나의 작업</Label>
-        <Select value={"나의 직업"}>
-          <option></option>
-          <option></option>
-          <option></option>
-          <option></option>
-        </Select>
-      </ControlItem>
-    </SideBack>
-  );
-}
+const UserName = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+`;
 
-export default SideBar;
+const Logout = styled.div`
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+`;
+
+
+const NavMenuUrls = [
+  {
+    title: '홈',
+    url: '/',
+  },
+  {
+    title: '둘러보기',
+    url: '/explorer',
+  },
+  {
+    title: '랭킹',
+    url: '/ranking',
+  },
+  {
+    title: '내 정보',
+    url: '/profile',
+  },
+];
+
+const SubmenuUrls = [
+  {
+    title: '현대과학의 초대',
+    url: 'chatting/science',
+  },
+  {
+    title: '세계사',
+    url: '/history',
+  },
+  {
+    title: '한국의 문화와 한류',
+    url: '/korean',
+  },
+]
+
+const Sidebar = () => {
+  const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
+
+  const toggleSubmenu = () => {
+    setIsSubmenuOpen(!isSubmenuOpen);
+  };
+
+  return (
+    <Container>
+      <div>
+        <Title>Teach me</Title>
+        <div>
+          {NavMenuUrls.map((menu, index) => (
+            <NavLink to={menu.url} key={index} className='sidebar-menu'>
+              <MenuItem>
+                <Icon/>
+                {menu.title}
+              </MenuItem>
+            </NavLink>
+          ), [])}
+
+          <Divider/>
+          <SubMenu>
+            <MenuItem onClick={toggleSubmenu}>
+              <Icon/>
+              나의 작업
+              <DropdownIndicator>{isSubmenuOpen ? '▲' : '▼'}</DropdownIndicator>
+            </MenuItem>
+            {isSubmenuOpen && (
+              <SubmenuItems>
+                {/*Todo: URL 바꾸기*/}
+                {SubmenuUrls.map((menu, index) => (
+                  <Link to='/chatting' key={index} className='sidebar-menu'>
+                    <SubmenuItem>{menu.title}</SubmenuItem>
+                  </Link>
+                ), [])}
+              </SubmenuItems>
+            )}
+          </SubMenu>
+        </div>
+      </div>
+      <UserInfo>
+        <UserIcon/>
+        <div>
+          <UserName>김지용</UserName>
+          <Logout>로그아웃</Logout>
+        </div>
+      </UserInfo>
+    </Container>
+  );
+};
+
+export default Sidebar;

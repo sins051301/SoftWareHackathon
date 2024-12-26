@@ -1,6 +1,7 @@
-import styled from 'styled-components';
-import {useNavigate} from 'react-router-dom';
 import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {setCookie} from '@/utils/cookies.ts';
+import styled from 'styled-components';
 
 // Styled Components
 const Container = styled.div`
@@ -9,7 +10,6 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   height: 100vh;
-  font-family: Arial, sans-serif;
 `;
 
 const Logo = styled.h1`
@@ -105,6 +105,11 @@ const Footer = styled.div`
   }
 `;
 
+const UserPasswords = [
+  {id: 1, password: 'user1'},
+  {id: 2, password: 'user2'},
+];
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const [password, setPassword] = useState<string>('');
@@ -112,20 +117,21 @@ const LoginPage = () => {
   // 쿠키 이름 user-cookie : 1 또는 2
   
   function login() {
-    alert('로그인 버튼 클릭');
-    
     if (password === '')
       return alert('비밀번호를 입력해주세요');
-    
-    if (password !== 'user1') {
-      document.cookie = 'user-cookie=1';
-    }
-    else {// (password !== 'user2') {
-      document.cookie = 'user-cookie=2';
-    }
 
-    navigate('/main');
-    return;
+    let isLogin = false;
+    UserPasswords.forEach(user => {
+      if (password === user.password) {
+        setCookie('user-cookie', user.id.toString());
+        isLogin = true;
+        navigate('/chatting');
+        return;
+      }
+    });
+
+    if (!isLogin)
+      alert('회원정보가 없습니다');
   }
   
   return (
