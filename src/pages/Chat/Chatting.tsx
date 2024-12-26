@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import postChatGpt from "@/api/postChatGpt";
 import styled from "styled-components";
 import ChattingContainer from "./ChattingContainer";
@@ -85,7 +85,7 @@ const dummyData: InputChatRequest = {
 export function Chatting() {
   const [title] = useState("현대과학의 초대");
 
-  const { chatHistory, setChatHistory, updateChatHistory } = useChatStore();
+  const { chatHistory, updateChatHistory } = useChatStore();
 
   const [talk, setTalk] = useState("");
 

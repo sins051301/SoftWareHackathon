@@ -1,20 +1,22 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "./services/TanstackQueryStore";
 import NotFound from "./pages/NotFound";
 import { MainLayout } from "./layouts/MainLayout";
+import TeamLayout from './layouts/TeamLayout.tsx';
 import Login from "./pages/Login";
 import MainPage from "./pages/MainPage";
 import CreateGroup from "./pages/CreateGroup";
 import Explorer from "./pages/Explorer";
-import Leaderboard from "./pages/Leaderboard";
+import Leaderboard from "./pages/team/Leaderboard";
+import TeamMembers from "./pages/team/TeamMembers";
+import TeamSummary from './pages/team/TeamSummary';
 import MyPage from "./pages/MyPage";
-import TeamPageHost from "./pages/TeamPageHost";
-import TeamPageGuest from "./pages/TeamPageGuest";
 import Chatting from "./pages/Chat/Chatting";
 import ReportPage from "./pages/ReportPage";
-import { QueryClientProvider } from "@tanstack/react-query";
-import { queryClient } from "./services/TanstackQueryStore";
+// import "./index.css";
 
-// Todo: Change TS setting 
+// Todo: Change TS setting
 
 const router = createBrowserRouter([
   {
@@ -24,14 +26,19 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <MainPage /> },
       { path: "login", element: <Login /> },
-      { path: "create-group", element: <CreateGroup /> },
       { path: "explorer", element: <Explorer /> },
-      { path: "leaderboard", element: <Leaderboard /> },
       { path: "my-page", element: <MyPage /> },
-      { path: "team-page-host", element: <TeamPageHost /> },
-      { path: "team-page-guest", element: <TeamPageGuest /> },
-      { path: "chatting", element: <Chatting /> },
+      { path: "create-group", element: <CreateGroup /> },
       { path: "report-page", element: <ReportPage /> },
+
+      { path: 'team/:teamId',
+        element: <TeamLayout />,
+        children: [
+          { path: "", element: <TeamSummary /> },
+          { path: "chatting", element: <Chatting /> },
+          { path: "member", element: <TeamMembers /> },
+          { path: "leaderboard", element: <Leaderboard /> },
+      ]},
     ],
   },
 ]);

@@ -1,7 +1,8 @@
-import {useState} from 'react';
-import {Link, NavLink} from 'react-router-dom';
-import styled from 'styled-components';
-
+import { useState } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { getUserId, logout } from "@/utils/auth.ts";
+import { useGetGroupListById } from "@/hooks/queries/group.query";
 
 // Styled Components
 const Container = styled.div`
@@ -92,52 +93,48 @@ const UserName = styled.div`
   font-weight: bold;
 `;
 
-const Logout = styled.div`
+const Logout = styled.button`
   font-size: 12px;
   color: #666;
   margin-top: 5px;
 `;
 
-
 const NavMenuUrls = [
   {
-    title: '홈',
-    url: '/',
+    title: "홈",
+    url: "/",
   },
   {
-    title: '둘러보기',
-    url: '/explorer',
+    title: "둘러보기",
+    url: "/explorer",
   },
   {
-    title: '랭킹',
-    url: '/ranking',
+    title: "랭킹",
+    url: "/ranking",
   },
   {
-    title: '내 정보',
-    url: '/profile',
+    title: "내 정보",
+    url: "/profile",
   },
 ];
 
-const SubmenuUrls = [
-  {
-    title: '현대과학의 초대',
-    url: 'chatting/science',
-  },
-  {
-    title: '세계사',
-    url: '/history',
-  },
-  {
-    title: '한국의 문화와 한류',
-    url: '/korean',
-  },
-]
-
 const Sidebar = () => {
+  const id = getUserId() ?? "14";
+
+  const { data } = useGetGroupListById(id);
+  console.log("!!", data);
+  // data를 활용한 로직 작성
+
+  const navigate = useNavigate();
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
 
   const toggleSubmenu = () => {
     setIsSubmenuOpen(!isSubmenuOpen);
+  };
+
+  const LogoutHandler = () => {
+    logout();
+    navigate("/login");
   };
 
   return (
@@ -145,40 +142,49 @@ const Sidebar = () => {
       <div>
         <Title>Teach me</Title>
         <div>
-          {NavMenuUrls.map((menu, index) => (
-            <NavLink to={menu.url} key={index} className='sidebar-menu'>
-              <MenuItem>
-                <Icon/>
-                {menu.title}
-              </MenuItem>
-            </NavLink>
-          ), [])}
+          {NavMenuUrls.map(
+            (menu, index) => (
+              <NavLink to={menu.url} key={index} className="sidebar-menu">
+                <MenuItem>
+                  <Icon />
+                  {menu.title}
+                </MenuItem>
+              </NavLink>
+            ),
+            []
+          )}
 
-          <Divider/>
+          <Divider />
           <SubMenu>
             <MenuItem onClick={toggleSubmenu}>
-              <Icon/>
-              나의 작업
-              <DropdownIndicator>{isSubmenuOpen ? '▲' : '▼'}</DropdownIndicator>
+              <Icon />
+              나의 클래스
+              <DropdownIndicator>{isSubmenuOpen ? "▲" : "▼"}</DropdownIndicator>
             </MenuItem>
             {isSubmenuOpen && (
               <SubmenuItems>
-                {/*Todo: URL 바꾸기*/}
-                {SubmenuUrls.map((menu, index) => (
-                  <Link to='/chatting' key={index} className='sidebar-menu'>
-                    <SubmenuItem>{menu.title}</SubmenuItem>
-                  </Link>
-                ), [])}
+                {data.map(
+                  (menu, index) => (
+                    <Link
+                      to={`/team/${menu.groupName}`}
+                      key={index}
+                      className="sidebar-menu"
+                    >
+                      <SubmenuItem>{menu.groupExplain}</SubmenuItem>
+                    </Link>
+                  ),
+                  []
+                )}
               </SubmenuItems>
             )}
           </SubMenu>
         </div>
       </div>
       <UserInfo>
-        <UserIcon/>
+        <UserIcon />
         <div>
           <UserName>김지용</UserName>
-          <Logout>로그아웃</Logout>
+          <Logout onClick={LogoutHandler}>로그아웃</Logout>
         </div>
       </UserInfo>
     </Container>

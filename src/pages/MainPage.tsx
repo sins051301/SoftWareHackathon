@@ -1,7 +1,6 @@
-import React from "react";
 import styled from "styled-components";
-import {Link} from 'react-router-dom';
-
+import { Link } from "react-router-dom";
+import { useGetGroupList } from "@/hooks/queries/group.query";
 // Styled Components
 const Container = styled.div`
   padding: 20px;
@@ -65,23 +64,77 @@ const SectionTitle = styled.h2`
 
 const GroupContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 `;
 
 const GroupCard = styled.div`
-  height: 120px;
+  height: 250px;
   background: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
 `;
 
-const MainPage: React.FC = () => {
+const GroupTitle = styled.div`
+  padding: 4%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 90%;
+  font-weight: bold;
+  font-size: 1rem;
+`;
+
+const Explain = styled.div`
+  padding: 1%;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+`;
+
+const Img = styled.img`
+  height: 160px;
+  width: 100%;
+`;
+
+const Letter = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-weight: bold;
+  background-color: #e5e5e5;
+  font-size: 0.7rem;
+  text-align: center;
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+    background-color: transparent; /* 원하는 배경색으로 설정 */
+  }
+`;
+
+const names = ["김", "이", "박", "신", "고", "정", "수"];
+const getRandomName = () => {
+  const randomIndex = Math.floor(Math.random() * names.length);
+  return names[randomIndex];
+};
+
+const MainPage = () => {
+  const { data, isError, error } = useGetGroupList();
+  if (isError) {
+    return <p>{error?.message}</p>;
+  }
+  console.log(data);
+
   return (
     <Container>
       <Header>
         <Title>홈</Title>
-        <Link to='/create-group' className='sidebar-menu'>
+        <Link to="/create-group" className="sidebar-menu">
           <CreateButton>+ 클래스 생성</CreateButton>
         </Link>
       </Header>
@@ -89,17 +142,30 @@ const MainPage: React.FC = () => {
         <WelcomeText>
           <h2>안녕하세요! 김지용님</h2>
           <p>
-            Teach me는 학생들이 AI에게 배운 내용을 설명하면서 학습 상태를 점검하고,
-            멘토는 학생들의 학습 상태를 확인할 수 있는 서비스입니다
+            Teach me는 학생들이 AI에게 배운 내용을 설명하면서 학습 상태를
+            점검하고, 멘토는 학생들의 학습 상태를 확인할 수 있는 서비스입니다
           </p>
         </WelcomeText>
       </WelcomeCard>
-      <SectionTitle>추천 클래스</SectionTitle>
+      <SectionTitle>나의 클래스</SectionTitle>
       <GroupContainer>
-        <GroupCard />
-        <GroupCard />
-        <GroupCard />
-        <GroupCard />
+        {data.map((item) => (
+          <StyledLink to={`team/${item.id}`}>
+            <GroupCard>
+              <Img src={"https://picsum.photos/300/200"} alt="" />
+              <GroupTitle>
+                <div>{item.name}</div>
+                <div style={{ fontSize: "0.5rem" }}>{item.userName}</div>
+              </GroupTitle>
+              <Explain>
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <Letter key={index}>{getRandomName()}</Letter>
+                ))}
+                <Letter>+50</Letter>
+              </Explain>
+            </GroupCard>
+          </StyledLink>
+        ))}
       </GroupContainer>
     </Container>
   );
