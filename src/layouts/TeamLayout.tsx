@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import {Outlet, useParams} from 'react-router-dom';
+import {Link, Outlet, useParams} from 'react-router-dom';
 import NavigationBar from '@components/NavigationBar.tsx';
 import {getUserId} from '@utils/auth.ts';
 import {useGetMyGroupList} from '@hooks/queries/group.query.ts';
@@ -77,7 +77,12 @@ const InfoValue = styled.span`
   color: #333;
 `;
 
-const ActionButton = styled.button`
+const ButtonLayout = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const ActionButton = styled(Link)`
   margin-top: 20px;
   padding: 10px 20px;
   background-color: #007bff;
@@ -86,8 +91,9 @@ const ActionButton = styled.button`
   border: none;
   border-radius: 30px;
   cursor: pointer;
-  display: block;
   margin-left: auto;
+  text-decoration: none;
+  
 
   &:hover {
     background-color: #0056b3;
@@ -139,7 +145,9 @@ const ScienceIntroPage: React.FC = () => {
         </RightSection>
       </Content>
 
-      <ActionButton>대화 시작하기</ActionButton>
+      <ButtonLayout>
+        <ActionButton to={`/chatting/${teamId}`}>대화로 이동</ActionButton>
+      </ButtonLayout>
     </Container>
   );
 };

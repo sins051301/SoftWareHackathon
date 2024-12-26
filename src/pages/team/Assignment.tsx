@@ -5,7 +5,7 @@ import LoadingSpinner from "@components/LoadingSpinner.tsx";
 import Add from "@/assets/add.svg?react";
 import { SettingInterface } from "@/types/Assignment";
 import { useParams } from "react-router-dom";
-import { useGetWeek } from "@/hooks/queries/week.query";
+
 
 // Styled Components
 const Container = styled.div`
@@ -152,7 +152,7 @@ const AddTaskButton = styled.button`
 
 const TaskSettingsPage: React.FC = () => {
   const { teamId } = useParams() ?? 1;
-  const {data}= useGetWeek(teamId);
+ 
 
   const { mutate, isPending, isError, error } = usePostAssignment();
   const [task, setTask] = useState<SettingInterface>({

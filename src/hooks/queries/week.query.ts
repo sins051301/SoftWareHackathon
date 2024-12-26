@@ -1,8 +1,8 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getWeek } from "@/api/week";
-import { WeekGetInterface } from "@/types/Week";
+import { SettingInterface } from "@/types/Assignment";
 export const useGetWeek = (id: string | undefined) => {
-  return useSuspenseQuery<WeekGetInterface[]>({
+  return useSuspenseQuery<SettingInterface>({
     queryKey: ["week", id],
     queryFn: () => getWeek(id),
   });

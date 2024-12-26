@@ -6,6 +6,8 @@ import { useChatStore } from "@/store/useChatStore";
 import { InputChatRequest } from "@/types/ChatInterface";
 import { Response } from "@/types/ChatInterface";
 import Spacing from "@/components/Spacing";
+import { useGetWeek } from "@/hooks/queries/week.query";
+import { useParams } from "react-router-dom";
 
 const Head = styled.h1`
   font-weight: bold;
@@ -83,8 +85,9 @@ const dummyData: InputChatRequest = {
 };
 
 export function Chatting() {
-  const [title] = useState("현대과학의 초대");
+  const { teamId } = useParams();
 
+  const { data } = useGetWeek(teamId);
   const { chatHistory, updateChatHistory } = useChatStore();
 
   const [talk, setTalk] = useState("");
@@ -111,11 +114,9 @@ export function Chatting() {
 
   return (
     <Container>
-      <Head>{title}</Head>
+      <Head>{data.name}</Head>
       <SubTitle>
-        <SubExplain>
-          과제3: 3주차에 배운 내용을 학습 도우미에게 설명해주세요
-        </SubExplain>
+        <SubExplain>{data.groupId}</SubExplain>
         <SubRule>
           학습도우미 지식 수준: 문외한 / 채팅 횟수 제한 20회 / 글자수 제한 300자
           / 마감일 9.20
