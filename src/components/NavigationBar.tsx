@@ -1,50 +1,66 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { NavLink, useParams } from "react-router-dom";
+import {NavLink, useParams} from 'react-router-dom';
 
 // Styled Components
-const NavContainer = styled.div`
+const Tabs = styled.div`
   display: flex;
-  align-items: center;
-  position: relative;
   border-bottom: 1px solid #ddd;
   margin-bottom: 20px;
 `;
 
-const NavItem = styled(NavLink)`
+interface TabProps {
+  active: boolean;
+}
+
+const Tab = styled(NavLink)<TabProps>`
+  padding: 10px 15px;
+  cursor: pointer;
   font-size: 14px;
-  text-transform: capitalize;
-  padding: 10px 20px;
-  color: #333;
   text-decoration: none;
-  position: relative;
+  color: ${({ active }) => (active ? "#000" : "#666")};
+  border-bottom: ${({ active }) => (active ? "2px solid #000" : "none")};
 
   &:hover {
-    color: #007bff;
+    color: #000;
   }
 `;
 
-interface ActiveIndicatorProps {
-  activeTab: string;
-}
+const AddTab = styled.div`
+  margin-left: auto;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #007bff;
 
-const ActiveIndicator = styled.div<ActiveIndicatorProps>`
-  position: absolute;
-  bottom: 0;
-  height: 3px;
-  width: 70%;
-  transition: transform 0.3s ease-in-out;
-
-  transform: ${({ activeTab }) =>
-    activeTab === "/overview"
-      ? "translateX(0%)"
-      : activeTab === "/member"
-      ? "translateX(100%)"
-      : "translateX(200%)"};
+  &:hover {
+    color: #0056b3;
+  }
 `;
+
+
+// interface ActiveIndicatorProps {
+//   activeTab: string;
+// }
+// const ActiveIndicator = styled.div<ActiveIndicatorProps>`
+//   position: absolute;
+//   bottom: 0;
+//   height: 3px;
+//   background-color: #007bff;
+//   width: 33.33%;
+//   transition: transform 0.3s ease-in-out;
+//
+//   transform: ${({ activeTab }) =>
+//   activeTab === "/overview"
+//     ? "translateX(0%)"
+//     : activeTab === "/member"
+//       ? "translateX(100%)"
+//       : "translateX(200%)"};
+// `;
 
 const NavItemUrls = [
   { name: "개요", url: "" },
+  // { name: "맴버", url: "/member" },
   { name: "과제", url: "/assignment" },
   { name: "랭킹", url: "/leaderboard" },
 ];
@@ -55,23 +71,22 @@ const NavigationBar = () => {
   const TeamUrl = "/team/" + params.teamId;
 
   return (
-    <NavContainer>
-      {NavItemUrls.map(
-        (item) => (
-          <NavItem
+    <>
+      <Tabs>
+        {NavItemUrls.map((item) => (
+          <Tab
             key={item.name}
             to={TeamUrl + item.url}
-            className={({ isActive }) => (isActive ? "active" : "")}
-            onClick={() => setActiveTab(item.name)}
+            active={activeTab === item.url}
+            onClick={() => setActiveTab(item.url)}
           >
             {item.name}
-          </NavItem>
-        ),
-        []
-      )}
+          </Tab>
+        ))}
 
-      <ActiveIndicator activeTab={activeTab} />
-    </NavContainer>
+        <AddTab>+</AddTab>
+      </Tabs>
+    </>
   );
 };
 

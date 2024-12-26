@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-
 import { useGetMyGroupList } from "@/hooks/queries/group.query";
 import { getUserId } from "@/utils/auth";
+
 // Styled Components
 const Container = styled.div`
   padding: 20px;
@@ -166,7 +166,7 @@ const MainPage = () => {
       <SectionTitle>나의 클래스</SectionTitle>
       <GroupContainer>
         {data.map((item) => (
-          <StyledLink to={`team/${item.id}`}>
+          <StyledLink key={item.id} to={`team/${item.id}`}>
             <GroupCard>
               <Img src={"https://picsum.photos/300/200"} alt="" />
               <GroupTitle>
