@@ -1,4 +1,4 @@
-import {getCookie, removeCookie, setCookie} from '@utils/cookies.ts';
+import {getCookie, removeCookie, setCookie} from '@/utils/cookies.ts';
 
 const LoginCookieName = "user-cookie";
 

@@ -1,9 +1,10 @@
-import { usePostChatGpt } from "@/hooks/queries/chatgpt.query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import postChatGpt from "@/api/postChatGpt";
 import styled from "styled-components";
 import ChattingContainer from "./ChattingContainer";
 import { useChatStore } from "@/store/useChatStore";
-import { ChatInterface } from "@/store/userType";
+import { InputChatRequest } from "@/types/ChatInterface";
+import { Response } from "@/types/ChatInterface";
 import Spacing from "@/components/Spacing";
 
 const Head = styled.h1`
@@ -69,48 +70,38 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-const dummyData: ChatInterface[] = [
-  {
-    talker: "ai",
-    content:
-      " 야, 이번 수업에서 VM의 구동 방식이랑 캐싱 전략 얘기했잖아. 너는 뭐가 제일 중요하다고 생각했어?",
+const dummyData: InputChatRequest = {
+  input: {
+    Class: "컴퓨터구조",
+    Lecture: "[2주차] VM의 구동원리와 캐싱 방식",
+    Level: "하",
+    history:
+      "AI: 안녕! 이번 수업에서 어떤 내용이 중요하다고 생각해? VM의 구동원리와 캐싱 방식에 대해 좀 더 알고 싶어!\n나영채: VM은 캐싱 방식이 조금 특이한데 VM은 운영체제를 흉내내도록 만들어져서 하드디스크를 캐싱해.",
   },
-  {
-    talker: "user",
-    content:
-      "VM은 소프트 웨어가 마치 하드웨어인것처럼 흉내를 내서 운영체제를 올리는 구조이기때문에 메모리 캐싱 전략이 조금 다르게 돌아가. 또한 사용가능한 메모리 수준도 제약이 있기때문에 하드웨어를 메모리처럼 사용하고 이과정에서 메모리에 블록단위로 캐싱을 하고있어.",
-  },
-  {
-    talker: "ai",
-    content:
-      "오, 그럼 VM에서는 하드웨어 자원이 실제 메모리처럼 쓰이니까 효율적인 캐싱이 더 중요하겠네? 블록 단위로 캐싱한다는 건 작은 데이터 덩어리들을 한 번에 처리해서 속도를 높이는 느낌인가 보지? 그런데 블록 크기를 어떻게 정하는지가 성능에 영향을 미칠 것 같은데, 그런 얘기도 했어?",
-  },
-];
+  config: {},
+  kwargs: {},
+};
 
 export function Chatting() {
   const [title] = useState("현대과학의 초대");
-  const [chathistory, setChatHistory] = useState(dummyData);
-  //const { chatHistory, setChatHistory, updateChatHistory } = useChatStore();
+
+  const { chatHistory, setChatHistory, updateChatHistory } = useChatStore();
+
   const [talk, setTalk] = useState("");
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     setTalk(e.target.value);
   }
 
-  function onClick() {
-    setChatHistory((prev) => [
-      ...prev,
-      {
-        talker: "user",
-        content: talk,
-      },
-      {
-        talker: "ai",
-        content:
-          "그렇구나! 그러면 블록 크기를 동적으로 조정할 수 있는 기능도 VM에 탑재되어 있나? 아니면 고정된 크기로 운영되는 경우가 더 많아?",
-      },
+  async function onClick() {
+    const data: Response = await postChatGpt(dummyData);
+
+    // 새 데이터를 chatHistory에 추가
+    updateChatHistory([
+      { talker: "user", content: talk },
+      { talker: "ai", content: data.output },
     ]);
-    setTalk("");
+    setTalk(""); // 입력을 비웁니다.
   }
 
   return (
@@ -127,7 +118,7 @@ export function Chatting() {
       </SubTitle>
       <Spacing size={4} />
       <ChatBack>
-        {chathistory.map((item, index) => (
+        {chatHistory.map((item, index) => (
           <ChattingContainer
             key={index}
             user={item.talker}

@@ -1,8 +1,8 @@
-import { ChatRequest } from "@/types/ChatInterface";
 import api from ".";
+import { InputChatRequest } from "@/types/ChatInterface";
 
-async function postChatGpt(message: ChatRequest) {
-  const { data } = await api.post("/api/chatGpt/prompt", message, {
+async function postChatGpt(message: InputChatRequest) {
+  const { data } = await api.post("/chat/invoke", message, {
     headers: {
       "Content-Type": "application/json",
     },

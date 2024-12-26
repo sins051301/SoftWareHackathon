@@ -25,6 +25,12 @@ export default defineConfig({
         secure: false,
         ws: true,
       },
+      "/chat/": {
+        target: "http://172.16.18.217:8765",
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+      },
     },
   },
 });
