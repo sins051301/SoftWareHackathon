@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { getUserId, logout } from "@/utils/auth.ts";
 import HomeIcon from "@assets/home.svg?react";
 import SearchIcon from "@assets/search.svg?react";
-import RankIcon from "@assets/rank.svg?react";
 import ProfileIcon from "@assets/profile.svg?react";
 import MyIcon from "@assets/my.svg?react";
 import MyProfile from "@assets/myProfile.svg?react";
@@ -97,9 +96,16 @@ const UserName = styled.div`
 `;
 
 const Logout = styled.button`
+  border: none;
+  background: none;
+  padding: 0;
   font-size: 12px;
   color: #666;
   margin-top: 5px;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const NavMenuUrls = [
@@ -112,11 +118,6 @@ const NavMenuUrls = [
     title: "둘러보기",
     url: "/explorer",
     IconComponent: SearchIcon,
-  },
-  {
-    title: "랭킹",
-    url: "/ranking",
-    IconComponent: RankIcon,
   },
   {
     title: "내 정보",

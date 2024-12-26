@@ -15,7 +15,7 @@ export interface InputChatRequest {
     Class: string;
     Lecture: string;
     Level: string;
-    history: string;
+    History: string;
   };
   config: Dict;
   kwargs: Dict;

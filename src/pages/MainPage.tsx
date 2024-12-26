@@ -1,10 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
-import {
-  useGetGroupList,
-  useGetMyGroupList,
-} from "@/hooks/queries/group.query";
+import { useGetMyGroupList } from "@/hooks/queries/group.query";
 import { getUserId } from "@/utils/auth";
 // Styled Components
 const Container = styled.div`

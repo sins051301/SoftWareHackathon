@@ -75,7 +75,7 @@ const dummyData: InputChatRequest = {
     Class: "컴퓨터구조",
     Lecture: "[2주차] VM의 구동원리와 캐싱 방식",
     Level: "하",
-    history:
+    History:
       "AI: 안녕! 이번 수업에서 어떤 내용이 중요하다고 생각해? VM의 구동원리와 캐싱 방식에 대해 좀 더 알고 싶어!\n나영채: VM은 캐싱 방식이 조금 특이한데 VM은 운영체제를 흉내내도록 만들어져서 하드디스크를 캐싱해.",
   },
   config: {},
@@ -91,6 +91,11 @@ export function Chatting() {
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     setTalk(e.target.value);
+  }
+  function onKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Enter") {
+      onClick();
+    }
   }
 
   async function onClick() {
@@ -133,6 +138,7 @@ export function Chatting() {
           placeholder="AI에게 배운 내용 설명해주세요"
           value={talk}
           onChange={onChange}
+          onKeyDown={onKeyDown}
         />
         <StyledButton onClick={onClick} />
       </Control>

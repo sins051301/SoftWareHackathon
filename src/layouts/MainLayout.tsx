@@ -1,6 +1,7 @@
-import { Outlet } from "react-router-dom";
+import {Outlet, useLocation} from 'react-router-dom';
 import styled from "styled-components";
 import SideBar from "@/components/SideBar";
+import {useEffect} from 'react';
 
 const MainBack = styled.div`
   width: 80vw;
@@ -14,6 +15,12 @@ const Layout = styled.div`
 `;
 
 export const MainLayout = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   return (
     <Layout>
       <SideBar />
