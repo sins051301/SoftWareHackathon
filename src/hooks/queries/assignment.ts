@@ -1,7 +1,14 @@
 import { queryClient } from "@/services/TanstackQueryStore";
-import { useMutation } from "@tanstack/react-query";
+import {useMutation, useSuspenseQuery} from '@tanstack/react-query';
 import { SettingInterface } from "@/types/Assignment";
-import postAssignment from "@/api/assignment";
+import postAssignment, {getAssignmentList} from '@/api/assignment';
+
+export const useGetWeek = (groupId: number) => {
+  return useSuspenseQuery<SettingInterface[]>({
+    queryKey: ["groups", groupId],
+    queryFn: () => getAssignmentList(groupId),
+  });
+};
 
 export const usePostAssignment = () => {
   return useMutation({

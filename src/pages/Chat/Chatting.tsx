@@ -3,11 +3,14 @@ import postChatGpt from "@/api/postChatGpt";
 import styled from "styled-components";
 import ChattingContainer from "./ChattingContainer";
 import { useChatStore } from "@/store/useChatStore";
-import { InputChatRequest } from "@/types/ChatInterface";
 import { Response } from "@/types/ChatInterface";
 import Spacing from "@/components/Spacing";
 import { useGetWeek } from "@/hooks/queries/week.query";
 import { useParams } from "react-router-dom";
+import { useGetMyGroupList } from "@/hooks/queries/group.query";
+import { getUserId } from "@/utils/auth";
+import { usePostEvaluate } from "@/hooks/queries/chatgpt.query";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const Head = styled.h1`
   font-weight: bold;
@@ -72,25 +75,27 @@ const Container = styled.div`
   height: 100vh;
 `;
 
-const dummyData: InputChatRequest = {
-  input: {
-    Class: "컴퓨터구조",
-    Lecture: "[2주차] VM의 구동원리와 캐싱 방식",
-    Level: "하",
-    History:
-      "AI: 안녕! 이번 수업에서 어떤 내용이 중요하다고 생각해? VM의 구동원리와 캐싱 방식에 대해 좀 더 알고 싶어!\n나영채: VM은 캐싱 방식이 조금 특이한데 VM은 운영체제를 흉내내도록 만들어져서 하드디스크를 캐싱해.",
-  },
-  config: {},
-  kwargs: {},
-};
+const maxCnt = 1;
 
 export function Chatting() {
   const { teamId } = useParams();
-
-  const { data } = useGetWeek(teamId);
-  const { chatHistory, updateChatHistory } = useChatStore();
-
+  const id = getUserId() ?? "1";
+  const {
+    mutate,
+    isPending,
+    isError,
+    error,
+    data: lastData,
+  } = usePostEvaluate();
+  const { data: mainTitle } = useGetMyGroupList(id);
+  const filteredGroup = mainTitle?.find((item) => String(item.id) === teamId);
+  if (filteredGroup === undefined) {
+    throw new Error("!!");
+  }
+  const { data: quest } = useGetWeek(teamId);
+  const { chatHistory, updateChatHistory, setChatHistory } = useChatStore();
   const [talk, setTalk] = useState("");
+  const [cnt, setNum] = useState(0);
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>) {
     setTalk(e.target.value);
@@ -100,23 +105,77 @@ export function Chatting() {
       onClick();
     }
   }
+  if (isError) {
+    alert(error.message);
+  }
+  if (isPending) {
+    return <LoadingSpinner />;
+  }
+  console.log(lastData);
 
   async function onClick() {
-    const data: Response = await postChatGpt(dummyData);
+    if (maxCnt <= cnt) {
+      const lastHistory = chatHistory
+        .map(
+          (item) => `${item.talker === "ai" ? "AI" : "User"}: ${item.content}`
+        )
+        .join("\n");
 
-    // 새 데이터를 chatHistory에 추가
+      // mutate({
+      //   input: {
+      //     Class: filteredGroup?.name || "",
+      //     Lecture: quest.name,
+      //     Level: "하",
+      //     History: lastHistory,
+      //   },
+      //   config: {},
+      //   kwargs: {},
+      // });
+
+      setChatHistory([
+        {
+          talker: "ai",
+          content:
+            "남은 응답횟수가 모두 소모되었어요. 설명 해주신 내용을 바탕으로 피드백을 해드릴게요",
+        },
+        {
+          talker: "ai",
+          content: lastData.output,
+        },
+      ]);
+      setTalk("");
+      return;
+    }
+    // 이전 히스토리 + 새로운 유저 입력을 포함한 히스토리 생성
+    const currentHistory = [...chatHistory, { talker: "user", content: talk }]
+      .map((item) => `${item.talker === "ai" ? "AI" : "User"}: ${item.content}`)
+      .join("\n");
+
+    const data: Response = await postChatGpt({
+      input: {
+        Class: filteredGroup?.name || "",
+        Lecture: quest.name,
+        Level: "하",
+        History: currentHistory,
+      },
+      config: {},
+      kwargs: {},
+    });
+    setNum((prev) => prev + 1);
+    // 새 대화를 추가한 후의 전체 히스토리
     updateChatHistory([
       { talker: "user", content: talk },
       { talker: "ai", content: data.output },
     ]);
-    setTalk(""); // 입력을 비웁니다.
+
+    setTalk("");
   }
 
   return (
     <Container>
-      <Head>{data.name}</Head>
+      <Head>{filteredGroup?.name}</Head>
       <SubTitle>
-        <SubExplain>{data.groupId}</SubExplain>
+        <SubExplain>{quest.name}</SubExplain>
         <SubRule>
           학습도우미 지식 수준: 문외한 / 채팅 횟수 제한 20회 / 글자수 제한 300자
           / 마감일 9.20

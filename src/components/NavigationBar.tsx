@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled from "styled-components";
-import {NavLink, useParams} from 'react-router-dom';
+import { NavLink, useParams } from "react-router-dom";
+import { isClassOwner } from "@utils/auth.ts";
 
 // Styled Components
 const Tabs = styled.div`
@@ -38,7 +39,6 @@ const AddTab = styled.div`
   }
 `;
 
-
 // interface ActiveIndicatorProps {
 //   activeTab: string;
 // }
@@ -58,14 +58,23 @@ const AddTab = styled.div`
 //       : "translateX(200%)"};
 // `;
 
-const NavItemUrls = [
+const NavItemHostUrls = [
   { name: "개요", url: "" },
-  // { name: "맴버", url: "/member" },
-  { name: "과제", url: "/assignment" },
+  { name: "맴버", url: "/member" },
+  { name: "과제", url: "/create/assignment" },
   { name: "랭킹", url: "/leaderboard" },
 ];
 
+const NavItemGuestUrls = [
+  { name: "개요", url: "" },
+  { name: "과제", url: "/assignment" },
+  { name: "랭킹", url: "/leaderboard" },
+  { name: "학습 현황", url: "/feedbacks" },
+];
+
 const NavigationBar = () => {
+  const NavItemUrls = isClassOwner() ? NavItemHostUrls : NavItemGuestUrls;
+
   const [activeTab, setActiveTab] = useState(NavItemUrls[0].url);
   const params = useParams();
   const TeamUrl = "/team/" + params.teamId;

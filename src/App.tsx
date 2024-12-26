@@ -17,6 +17,8 @@ import ReportPage from "./pages/ReportPage";
 import LoadingSpinner from "./components/LoadingSpinner.tsx";
 import Chatting from "./pages/Chat/Chatting.tsx";
 import Assignment from "./pages/team/Assignment.tsx";
+import Feedbacks from "./pages/team/Feedbacks.tsx";
+import AssignmentList from "@pages/team/AssignmentList.tsx";
 
 const router = createBrowserRouter([
   { path: "login", element: <Login />, errorElement: <NotFound /> },
@@ -36,9 +38,11 @@ const router = createBrowserRouter([
         element: <TeamLayout />,
         children: [
           { path: "", element: <TeamSummary /> },
-          { path: "assignment", element: <Assignment /> },
+          { path: "create/assignment", element: <Assignment /> },
+          { path: "assignment", element: <AssignmentList /> },
           { path: "member", element: <TeamMembers /> },
           { path: "leaderboard", element: <Leaderboard /> },
+          { path: "feedbacks", element: <Feedbacks /> },
         ],
       },
       {

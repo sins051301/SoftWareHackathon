@@ -1,10 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import {Link, Outlet, useParams} from 'react-router-dom';
-import NavigationBar from '@components/NavigationBar.tsx';
-import {getUserId} from '@utils/auth.ts';
-import {useGetMyGroupList} from '@hooks/queries/group.query.ts';
-
+import { Link, Outlet, useParams } from "react-router-dom";
+import NavigationBar from "@components/NavigationBar.tsx";
+import { getUserId } from "@utils/auth.ts";
+import { useGetMyGroupList } from "@hooks/queries/group.query.ts";
 
 // Styled Components
 const Container = styled.div`
@@ -80,6 +79,7 @@ const InfoValue = styled.span`
 const ButtonLayout = styled.div`
   display: flex;
   justify-content: flex-end;
+  gap: 10px;
 `;
 
 const ActionButton = styled(Link)`
@@ -93,13 +93,11 @@ const ActionButton = styled(Link)`
   cursor: pointer;
   margin-left: auto;
   text-decoration: none;
-  
 
   &:hover {
     background-color: #0056b3;
   }
 `;
-
 
 const ScienceIntroPage: React.FC = () => {
   const id = getUserId() ?? "1";
@@ -120,10 +118,9 @@ const ScienceIntroPage: React.FC = () => {
       </Header>
       <Content>
         <LeftSection>
-          <NavigationBar/>
+          <NavigationBar />
 
-          <Outlet/>
-
+          <Outlet />
         </LeftSection>
 
         <RightSection>
@@ -135,7 +132,7 @@ const ScienceIntroPage: React.FC = () => {
             </InfoItem>
             <InfoItem>
               <InfoLabel>공개 범위</InfoLabel>
-              <InfoValue>{filteredGroup?.isOpen ? "공개" : "비공개" }</InfoValue>
+              <InfoValue>{filteredGroup?.isOpen ? "공개" : "비공개"}</InfoValue>
             </InfoItem>
             <InfoItem>
               <InfoLabel>멤버</InfoLabel>
@@ -146,7 +143,7 @@ const ScienceIntroPage: React.FC = () => {
       </Content>
 
       <ButtonLayout>
-        <ActionButton to={`/chatting/${teamId}`}>대화로 이동</ActionButton>
+        <ActionButton to={`/chatting/${teamId}`}>대화 시작하기</ActionButton>
       </ButtonLayout>
     </Container>
   );

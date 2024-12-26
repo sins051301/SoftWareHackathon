@@ -9,4 +9,14 @@ async function postAssignment(assignment: SettingInterface) {
   });
   return data;
 }
+
+export async function getAssignmentList(groupId: number) {
+  const { data } = await api.get(`/api/groups/week?groupId=${groupId}`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  return data;
+}
+
 export default postAssignment;
