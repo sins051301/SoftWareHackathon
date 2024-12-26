@@ -1,33 +1,34 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
+
+const NavItemUrls = [
+  { name: "overview", url: "" },
+  { name: "members", url: "/member" },
+  { name: "chatting", url: "/chatting" },
+  { name: "leaderboard", url: "/leaderboard" },
+];
 
 const NavigationBar = () => {
-  const [activeTab, setActiveTab] = useState("/overview");
+  const [activeTab, setActiveTab] = useState(NavItemUrls[0].url);
+  const params = useParams();
+  const TeamUrl = "/team/" + params.teamId;
 
   return (
     <NavContainer>
-      <NavItem
-        to="/"
-        className={({ isActive }) => (isActive ? "active" : "")}
-        onClick={() => setActiveTab("/overview")}
-      >
-        overview
-      </NavItem>
-      <NavItem
-        to="/members"
-        className={({ isActive }) => (isActive ? "active" : "")}
-        onClick={() => setActiveTab("/member")}
-      >
-        Member
-      </NavItem>
-      <NavItem
-        to="/leaderboard"
-        className={({ isActive }) => (isActive ? "active" : "")}
-        onClick={() => setActiveTab("/leaderboard")}
-      >
-        Leaderboard
-      </NavItem>
+      {NavItemUrls.map(
+        (item) => (
+          <NavItem
+            to={TeamUrl + item.url}
+            className={({ isActive }) => (isActive ? "active" : "")}
+            onClick={() => setActiveTab(item.name)}
+          >
+            {item.name}
+          </NavItem>
+        ),
+        []
+      )}
+
       <ActiveIndicator activeTab={activeTab} />
     </NavContainer>
   );
@@ -54,11 +55,6 @@ const NavItem = styled(NavLink)`
 
   &:hover {
     color: #007bff;
-  }
-
-  &.active {
-    color: #000;
-    font-weight: bold;
   }
 `;
 

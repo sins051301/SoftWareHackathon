@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { createGroup } from "@/api/groupAPI.ts";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-
+import { usePostGroup } from "@/hooks/queries/group.query";
+import LoadingSpinner from "@/components/LoadingSpinner";
 // Styled Components
 const Container = styled.div`
   max-width: 600px;
@@ -88,13 +88,21 @@ const CreateGroup = () => {
   const [descriptions, setDescriptions] = useState("");
   const [isPublicString, setIsPublicString] = useState("true");
   const [password, setPassword] = useState("");
+  const { mutate, isPending } = usePostGroup();
+
+  if (isPending) {
+    return <LoadingSpinner></LoadingSpinner>;
+  }
 
   function handleSubmit() {
-    createGroup(name, descriptions, !!isPublicString, password).then(() => {
-      // update group list
-      alert("클래스가 생성되었습니다.");
-      navigate("/");
+    mutate({
+      name: name,
+      isOpen: isPublicString === "true" ? true : false,
+      explain: descriptions,
+      password: password,
     });
+    alert("클래스가 생성되었습니다.");
+    navigate("/");
   }
 
   return (

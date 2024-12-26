@@ -1,6 +1,11 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useGetGroupList } from "@/hooks/queries/group.query";
+
+import {
+  useGetGroupList,
+  useGetMyGroupList,
+} from "@/hooks/queries/group.query";
+import { getUserId } from "@/utils/auth";
 // Styled Components
 const Container = styled.div`
   padding: 20px;
@@ -22,16 +27,25 @@ const Title = styled.h1`
 `;
 
 const CreateButton = styled.button`
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  padding: 5px 15px;
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 30px;
   cursor: pointer;
-  font-weight: 600;
 
   &:hover {
     background: #f7f7f7;
+  }
+
+  span {
+    margin-right: 5px;
+    font-weight: 500;
   }
 `;
 
@@ -118,13 +132,15 @@ const StyledLink = styled(Link)`
 `;
 
 const names = ["김", "이", "박", "신", "고", "정", "수"];
-const getRandomName = () => {
+export const getRandomName = () => {
   const randomIndex = Math.floor(Math.random() * names.length);
   return names[randomIndex];
 };
 
 const MainPage = () => {
-  const { data, isError, error } = useGetGroupList();
+  const id = getUserId() ?? "1";
+  const { data, isError, error } = useGetMyGroupList(id);
+
   if (isError) {
     return <p>{error?.message}</p>;
   }
@@ -135,7 +151,10 @@ const MainPage = () => {
       <Header>
         <Title>홈</Title>
         <Link to="/create-group" className="sidebar-menu">
-          <CreateButton>+ 클래스 생성</CreateButton>
+          <CreateButton>
+            <span>+</span>
+            클래스 생성
+          </CreateButton>
         </Link>
       </Header>
       <WelcomeCard>

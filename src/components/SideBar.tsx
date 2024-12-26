@@ -2,9 +2,14 @@ import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getUserId, logout } from "@/utils/auth.ts";
-import { useGetGroupListById } from "@/hooks/queries/group.query";
+import HomeIcon from "@assets/home.svg?react";
+import SearchIcon from "@assets/search.svg?react";
+import RankIcon from "@assets/rank.svg?react";
+import ProfileIcon from "@assets/profile.svg?react";
+import MyIcon from "@assets/my.svg?react";
+import MyProfile from "@assets/myProfile.svg?react";
+import { useGetMyGroupList } from "@/hooks/queries/group.query";
 
-// Styled Components
 const Container = styled.div`
   box-sizing: border-box;
   width: 240px;
@@ -15,8 +20,7 @@ const Container = styled.div`
   top: 0;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #fff;
-  border-right: 1px solid #ddd;
+  background-color: #e6f4ff;
   padding: 20px;
 `;
 
@@ -39,11 +43,9 @@ const MenuItem = styled.div`
   }
 `;
 
-const Icon = styled.div`
+const IconWrapper = styled.div`
   width: 20px;
   height: 20px;
-  background-color: #ddd;
-  border-radius: 4px;
   margin-right: 10px;
 `;
 
@@ -86,6 +88,7 @@ const UserIcon = styled.div`
   background-color: #ddd;
   border-radius: 50%;
   margin-right: 10px;
+  text-align: center;
 `;
 
 const UserName = styled.div`
@@ -103,28 +106,28 @@ const NavMenuUrls = [
   {
     title: "홈",
     url: "/",
+    IconComponent: HomeIcon,
   },
   {
     title: "둘러보기",
     url: "/explorer",
+    IconComponent: SearchIcon,
   },
   {
     title: "랭킹",
     url: "/ranking",
+    IconComponent: RankIcon,
   },
   {
     title: "내 정보",
     url: "/profile",
+    IconComponent: ProfileIcon,
   },
 ];
 
 const Sidebar = () => {
-  const id = getUserId() ?? "14";
-
-  const { data } = useGetGroupListById(id);
-  console.log("!!", data);
-  // data를 활용한 로직 작성
-
+  const id = getUserId() ?? "1";
+  const { data } = useGetMyGroupList(id);
   const navigate = useNavigate();
   const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
 
@@ -142,46 +145,49 @@ const Sidebar = () => {
       <div>
         <Title>Teach me</Title>
         <div>
-          {NavMenuUrls.map(
-            (menu, index) => (
-              <NavLink to={menu.url} key={index} className="sidebar-menu">
-                <MenuItem>
-                  <Icon />
-                  {menu.title}
-                </MenuItem>
-              </NavLink>
-            ),
-            []
-          )}
+          {NavMenuUrls.map((menu, index) => (
+            <NavLink to={menu.url} key={index} className="sidebar-menu">
+              <MenuItem>
+                <IconWrapper>
+                  <menu.IconComponent style={{ width: "20", height: "20" }} />
+                </IconWrapper>
+                {menu.title}
+              </MenuItem>
+            </NavLink>
+          ))}
 
           <Divider />
           <SubMenu>
             <MenuItem onClick={toggleSubmenu}>
-              <Icon />
+              <IconWrapper>
+                <MyIcon />
+              </IconWrapper>
               나의 클래스
               <DropdownIndicator>{isSubmenuOpen ? "▲" : "▼"}</DropdownIndicator>
             </MenuItem>
             {isSubmenuOpen && (
               <SubmenuItems>
-                {data.map(
-                  (menu, index) => (
-                    <Link
-                      to={`/team/${menu.groupName}`}
-                      key={index}
-                      className="sidebar-menu"
-                    >
-                      <SubmenuItem>{menu.groupExplain}</SubmenuItem>
-                    </Link>
-                  ),
-                  []
-                )}
+                {data.map((menu, index) => (
+                  <Link
+                    to={`/team/${menu.id}`}
+                    key={index}
+                    className="sidebar-menu"
+                  >
+                    <SubmenuItem>{menu.name}</SubmenuItem>
+                  </Link>
+                ))}
               </SubmenuItems>
             )}
           </SubMenu>
         </div>
       </div>
       <UserInfo>
-        <UserIcon />
+        <UserIcon>
+          <MyProfile
+            style={{ width: "32px", height: "32px", textAlign: "center" }}
+          />
+        </UserIcon>
+
         <div>
           <UserName>김지용</UserName>
           <Logout onClick={LogoutHandler}>로그아웃</Logout>

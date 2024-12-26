@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
-
+import { useGetGroupList } from "@/hooks/queries/group.query.ts";
+import GroupCard from "@/components/GroupCard.tsx";
 
 // Styled Components
 const Container = styled.div`
@@ -21,22 +22,16 @@ const Title = styled.h1`
   font-weight: bold;
 `;
 
-const SearchInput = styled.input`
-  width: 200px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  font-size: 14px;
-`;
+// const SearchInput = styled.input`
+//   width: 200px;
+//   padding: 10px;
+//   border: 1px solid #ddd;
+//   border-radius: 20px;
+//   font-size: 14px;
+// `;
 
 const Section = styled.div`
   margin-top: 20px;
-`;
-
-const SectionTitle = styled.h2`
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 20px;
 `;
 
 const CardContainer = styled.div`
@@ -46,48 +41,28 @@ const CardContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-const Card = styled.div`
-  height: 150px;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-`;
-
-const Content = styled.div`
-  margin-top: 20px;
-`;
-
-const ContentTitle = styled.h3`
-  font-size: 18px;
-  font-weight: bold;
-`;
-
-const ContentText = styled.p`
-  font-size: 14px;
-  color: #666;
-  margin-top: 5px;
-`;
-
-
 const Explorer: React.FC = () => {
+  const { data, isError, error } = useGetGroupList();
+
+  if (isError) {
+    return <p>{error?.message}</p>;
+  }
+
   return (
     <Container>
       <Header>
-        <Title>Explorer</Title>
-        <SearchInput placeholder="검색" />
+        <Title>둘러보기</Title>
+        {/*<SearchInput placeholder="검색" />*/}
       </Header>
       <Section>
-        <SectionTitle>Explorer</SectionTitle>
         <CardContainer>
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          {data?.map(
+            (item) => (
+              <GroupCard key={item.id} item={item} />
+            ),
+            []
+          )}
         </CardContainer>
-        <Content>
-          <ContentTitle>Title</ContentTitle>
-          <ContentText>contents</ContentText>
-        </Content>
       </Section>
     </Container>
   );

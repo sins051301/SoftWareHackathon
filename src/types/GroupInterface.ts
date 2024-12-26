@@ -20,3 +20,10 @@ export interface GroupInfoByIdResponse {
   groupExplain: string;
   groupName: string;
 }
+
+export interface GroupPostInterface {
+  name: string;
+  explain: string;
+  isOpen: boolean;
+  password: string;
+}

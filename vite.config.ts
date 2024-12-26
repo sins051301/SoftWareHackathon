@@ -1,6 +1,6 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import svgr from "vite-plugin-svgr";
+import {defineConfig} from 'vite';
+import react from '@vitejs/plugin-react';
+import svgr from 'vite-plugin-svgr';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -8,25 +8,34 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: "index.html",
+        main: 'index.html',
       },
     },
   },
   resolve: {
     alias: {
-      "@": "/src",
+      '@': '/src',
+      '@assets': '/src/assets',
+      '@components': '/src/components',
+      '@constant': '/src/constant',
+      '@hooks': '/src/hooks',
+      '@pages': '/src/pages',
+      '@services': '/src/services',
+      '@store': '/src/store',
+      '@utils': '/src/utils',
+      '@types': '/src/types',
     },
   },
   server: {
     proxy: {
-      "/api": {
-        target: "http://3.38.176.228:8080",
+      '/api': {
+        target: 'http://3.38.176.228:8080',
         changeOrigin: true,
         secure: false,
         ws: true,
       },
-      "/chat/": {
-        target: "http://172.16.18.217:8765",
+      '/chat/': {
+        target: 'http://172.16.18.217:8765',
         changeOrigin: true,
         secure: false,
         ws: true,
