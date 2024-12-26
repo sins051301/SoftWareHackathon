@@ -1,12 +1,12 @@
-import {Outlet, useLocation} from 'react-router-dom';
+import { Outlet, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import SideBar from "@/components/SideBar";
-import {useEffect} from 'react';
+import { useEffect, useRef } from "react";
 
 const MainBack = styled.div`
-  width: 80vw;
+  width: 90vw;
   height: 100vh;
-  padding: 5%;
+  overflow-y: auto;
 `;
 
 const Layout = styled.div`
@@ -14,18 +14,25 @@ const Layout = styled.div`
   flex-direction: row;
 `;
 
+const MainScroll = styled.div`
+  padding: 5%;
+`;
+
 export const MainLayout = () => {
   const location = useLocation();
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (ref.current) ref.current.scrollTo(0, 0);
   }, [location]);
 
   return (
     <Layout>
       <SideBar />
-      <MainBack>
-        <Outlet />
+      <MainBack ref={ref}>
+        <MainScroll>
+          <Outlet />
+        </MainScroll>
       </MainBack>
     </Layout>
   );

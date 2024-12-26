@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./services/TanstackQueryStore";
@@ -14,7 +15,7 @@ import TeamSummary from "./pages/team/TeamSummary";
 import MyPage from "./pages/MyPage";
 import ReportPage from "./pages/ReportPage";
 import LoadingSpinner from "./components/LoadingSpinner.tsx";
-import { Suspense } from "react";
+import Chatting from "./pages/Chat/Chatting.tsx";
 import Assignment from "./pages/team/Assignment.tsx";
 
 const router = createBrowserRouter([
@@ -26,7 +27,7 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <MainPage /> },
       { path: "explorer", element: <Explorer /> },
-      { path: "my-page", element: <MyPage /> },
+      { path: "profile", element: <MyPage /> },
       { path: "create-group", element: <CreateGroup /> },
       { path: "report-page", element: <ReportPage /> },
 
@@ -38,6 +39,13 @@ const router = createBrowserRouter([
           { path: "assignment", element: <Assignment /> },
           { path: "member", element: <TeamMembers /> },
           { path: "leaderboard", element: <Leaderboard /> },
+        ],
+      },
+      {
+        path: "chatting/:teamId",
+        children: [
+          { path: "", element: <Chatting /> },
+          { path: ":weekId", element: <Chatting /> },
         ],
       },
     ],

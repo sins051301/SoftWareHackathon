@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useGetMyGroupList } from "@/hooks/queries/group.query";
 import { getUserId } from "@/utils/auth";
+import NoContents from '@components/NoContents.tsx';
 
 // Styled Components
 const Container = styled.div`
@@ -27,6 +28,7 @@ const CreateButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   background-color: #007bff;
   color: #fff;
   font-size: 16px;
@@ -37,7 +39,11 @@ const CreateButton = styled.button`
   cursor: pointer;
 
   &:hover {
-    background: #f7f7f7;
+    background-color: #0056b3;
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 
   span {
@@ -164,6 +170,11 @@ const MainPage = () => {
         </WelcomeText>
       </WelcomeCard>
       <SectionTitle>나의 클래스</SectionTitle>
+
+      {data && data.length === 0 && (
+        <NoContents message="생성된 클래스가 없습니다." />
+      )}
+
       <GroupContainer>
         {data.map((item) => (
           <StyledLink key={item.id} to={`team/${item.id}`}>
