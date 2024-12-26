@@ -12,10 +12,10 @@ import Leaderboard from "./pages/team/Leaderboard";
 import TeamMembers from "./pages/team/TeamMembers";
 import TeamSummary from "./pages/team/TeamSummary";
 import MyPage from "./pages/MyPage";
-import Chatting from "./pages/Chat/Chatting";
 import ReportPage from "./pages/ReportPage";
 import LoadingSpinner from "./components/LoadingSpinner.tsx";
 import { Suspense } from "react";
+import Assignment from "./pages/team/Assignment.tsx";
 
 const router = createBrowserRouter([
   { path: "login", element: <Login />, errorElement: <NotFound /> },
@@ -35,7 +35,7 @@ const router = createBrowserRouter([
         element: <TeamLayout />,
         children: [
           { path: "", element: <TeamSummary /> },
-          { path: "chatting", element: <Chatting /> },
+          { path: "assignment", element: <Assignment /> },
           { path: "member", element: <TeamMembers /> },
           { path: "leaderboard", element: <Leaderboard /> },
         ],

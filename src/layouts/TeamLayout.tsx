@@ -1,7 +1,8 @@
-import {Outlet} from 'react-router-dom';
+import { Outlet, useParams } from "react-router-dom";
 import styled from "styled-components";
 import NavigationBar from "@/components/NavigationBar";
-
+import { getUserId } from "@/utils/auth";
+import { useGetMyGroupList } from "@/hooks/queries/group.query";
 
 // Styled Components
 const Container = styled.div`
@@ -12,29 +13,38 @@ const Container = styled.div`
 `;
 
 const Header = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Title = styled.h1`
-  font-size: 24px;
+  font-size: 2rem;
   font-weight: bold;
 `;
 
-const Subtitle = styled.p`
-  font-size: 14px;
-  color: #666;
+const Name = styled.span`
+  font-weight: bold;
 `;
 
 const CodingPage = () => {
+  const id = getUserId() ?? "1";
+  const { teamId } = useParams();
 
+  const { data, isError, error } = useGetMyGroupList(id);
+
+  if (isError) {
+    return <p>{error?.message}</p>;
+  }
+  const filteredGroup = data?.find((item) => String(item.id) === teamId);
   return (
     <Container>
       <Header>
         <Title>Coding</Title>
-        <Subtitle>
-          Start here! Predict survival on the Titanic and get familiar with ML
-          basics
-        </Subtitle>
+        <Name> {filteredGroup?.userName}</Name>
       </Header>
       <NavigationBar />
       {/*Todo: Nav 부분적으로 나누기*/}

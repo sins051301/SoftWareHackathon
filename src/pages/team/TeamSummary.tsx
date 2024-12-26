@@ -18,6 +18,10 @@ const Content = styled.div`
   }
 `;
 
+const StyledP = styled.p`
+  font-weight: bold;
+`;
+
 const TeamSummary = () => {
   const id = getUserId() ?? "1";
   const { teamId } = useParams();
@@ -30,7 +34,7 @@ const TeamSummary = () => {
   const filteredGroup = data?.find((item) => String(item.id) === teamId);
   return (
     <Content>
-      <p>{filteredGroup?.explain}</p>
+      <StyledP>{filteredGroup?.explain}</StyledP>
     </Content>
   );
 };

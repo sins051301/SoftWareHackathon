@@ -32,8 +32,7 @@ const ActiveIndicator = styled.div<ActiveIndicatorProps>`
   position: absolute;
   bottom: 0;
   height: 3px;
-  background-color: #007bff;
-  width: 33.33%;
+  width: 70%;
   transition: transform 0.3s ease-in-out;
 
   transform: ${({ activeTab }) =>
@@ -45,10 +44,9 @@ const ActiveIndicator = styled.div<ActiveIndicatorProps>`
 `;
 
 const NavItemUrls = [
-  { name: "overview", url: "" },
-  { name: "members", url: "/member" },
-  { name: "chatting", url: "/chatting" },
-  { name: "leaderboard", url: "/leaderboard" },
+  { name: "개요", url: "" },
+  { name: "과제", url: "/assignment" },
+  { name: "랭킹", url: "/leaderboard" },
 ];
 
 const NavigationBar = () => {
