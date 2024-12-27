@@ -26,3 +26,14 @@ export interface InputEvaluateRequest {
   config: Dict;
   kwargs: Dict;
 }
+
+
+interface Output {
+  score: string[];
+  insight: string;
+}
+
+export interface EvaluateResponse {
+  output: Output;
+  metadata: Metadata;
+}

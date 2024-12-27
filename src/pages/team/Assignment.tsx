@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { usePostAssignment } from "@hooks/queries/assignment.ts";
 import LoadingSpinner from "@components/LoadingSpinner.tsx";
 import Add from "@/assets/add.svg?react";
-import { SettingInterface } from "@/types/Assignment";
+import { AssignmentRequest } from "@/types/Assignment";
 import { useParams } from "react-router-dom";
 
 
@@ -155,7 +155,7 @@ const TaskSettingsPage: React.FC = () => {
  
 
   const { mutate, isPending, isError, error } = usePostAssignment();
-  const [task, setTask] = useState<SettingInterface>({
+  const [task, setTask] = useState<AssignmentRequest>({
     name: "",
     groupId: Number(teamId),
     focusOne: "",

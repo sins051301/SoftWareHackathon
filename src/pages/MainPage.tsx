@@ -147,7 +147,6 @@ const MainPage = () => {
   if (isError) {
     return <p>{error?.message}</p>;
   }
-  console.log(data);
 
   return (
     <Container>

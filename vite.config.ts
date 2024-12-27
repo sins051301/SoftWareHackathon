@@ -34,8 +34,9 @@ export default defineConfig({
         secure: false,
         ws: true,
       },
-      '/chat/': {
+      '/ai/': {
         target: 'http://172.16.18.217:8765',
+        rewrite: (path) => path.replace(/^\/ai/, ''),
         changeOrigin: true,
         secure: false,
         ws: true,

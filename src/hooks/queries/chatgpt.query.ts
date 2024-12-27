@@ -1,4 +1,4 @@
-import postChatGpt from "@/api/postChatGpt";
+import postEvaluate from "@/api/postEvaluate";
 import { queryClient } from "@/services/TanstackQueryStore";
 import { InputEvaluateRequest } from "@/types/EvaluateInterface";
 import { useMutation } from "@tanstack/react-query";
@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 export function usePostEvaluate() {
   return useMutation({
     mutationKey: ["chat"],
-    mutationFn: (data: InputEvaluateRequest) => postChatGpt(data),
+    mutationFn: (data: InputEvaluateRequest) => postEvaluate(data),
     onError: (error) => {
       alert(error?.message);
     },

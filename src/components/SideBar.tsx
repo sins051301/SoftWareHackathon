@@ -130,7 +130,7 @@ const Sidebar = () => {
   const id = getUserId() ?? "1";
   const { data } = useGetMyGroupList(id);
   const navigate = useNavigate();
-  const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
+  const [isSubmenuOpen, setIsSubmenuOpen] = useState(true);
 
   const toggleSubmenu = () => {
     setIsSubmenuOpen(!isSubmenuOpen);

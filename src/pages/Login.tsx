@@ -1,7 +1,7 @@
-import {useState} from 'react';
-import {useNavigate} from 'react-router-dom';
-import {setCookie} from '@/utils/cookies.ts';
-import styled from 'styled-components';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { setCookie } from "@/utils/cookies.ts";
+import styled from "styled-components";
 
 // Styled Components
 const Container = styled.div`
@@ -23,7 +23,7 @@ const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  border: 1px solid rgba(0, 0, 0, .12);
+  border: 1px solid rgba(0, 0, 0, 0.12);
   padding: 55px 69px 50px 69px;
   width: 580px;
 `;
@@ -106,40 +106,43 @@ const Footer = styled.div`
 `;
 
 const UserPasswords = [
-  {id: 1, password: 'user1'},
-  {id: 2, password: 'user2'},
+  { id: 1, password: "user1" },
+  { id: 2, password: "user2" },
 ];
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const [password, setPassword] = useState<string>('');
+  const [password, setPassword] = useState<string>("");
   // 아이디 따라서 쿠키 저장
   // 쿠키 이름 user-cookie : 1 또는 2
-  
+
   function login() {
-    if (password === '')
-      return alert('비밀번호를 입력해주세요');
+    if (password === "") return alert("비밀번호를 입력해주세요");
 
     let isLogin = false;
-    UserPasswords.forEach(user => {
+    UserPasswords.forEach((user) => {
       if (password === user.password) {
-        setCookie('user-cookie', user.id.toString());
+        setCookie("user-cookie", user.id.toString());
         isLogin = true;
-        navigate('/chatting');
+        navigate("/");
         return;
       }
     });
 
-    if (!isLogin)
-      alert('회원정보가 없습니다');
+    if (!isLogin) alert("회원정보가 없습니다");
   }
-  
+
   return (
     <Container>
       <Logo>kakao</Logo>
       <LoginForm>
-        <Input type="text" placeholder="카카오메일 아이디, 이메일, 전화번호"/>
-        <Input type="password" placeholder="비밀번호" value={password} onChange={e => setPassword(e.target.value)}/>
+        <Input type="text" placeholder="카카오메일 아이디, 이메일, 전화번호" />
+        <Input
+          type="password"
+          placeholder="비밀번호"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <CheckboxContainer>
           <Checkbox type="checkbox" />
           <label>간편로그인 정보 저장</label>

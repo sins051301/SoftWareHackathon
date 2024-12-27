@@ -67,7 +67,6 @@ const RankingPage = () => {
 
   const { data } = useGetLeaderBoard(teamId);
 
-  console.log("leader", data);
   const filteredRankings = data.filter((ranking) =>
     ranking.userName.includes(search)
   );

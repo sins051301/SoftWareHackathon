@@ -60,9 +60,10 @@ const AddTab = styled.div`
 
 const NavItemHostUrls = [
   { name: "개요", url: "" },
-  { name: "맴버", url: "/member" },
+  // { name: "맴버", url: "/member" },
   { name: "과제", url: "/create/assignment" },
   { name: "랭킹", url: "/leaderboard" },
+  { name: "학습 현황", url: "/feedbacks" },
 ];
 
 const NavItemGuestUrls = [

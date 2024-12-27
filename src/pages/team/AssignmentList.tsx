@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import { usePostAssignment } from "@hooks/queries/assignment.ts";
-import LoadingSpinner from "@components/LoadingSpinner.tsx";
-import { SettingInterface } from "@/types/Assignment";
-import { useGetWeek } from "@/hooks/queries/week.query";
+import {Link, useParams} from 'react-router-dom';
+import styled from 'styled-components';
+import LoadingSpinner from '@components/LoadingSpinner.tsx';
+import {SettingInterface} from '@/types/Assignment';
+import {useGetWeek} from '@/hooks/queries/assignment';
+import NoContents from '@components/NoContents.tsx';
 
 // Styled Components
 const Container = styled.div`
@@ -46,30 +45,9 @@ const TaskCard = styled.div`
 `;
 
 const TaskTitle = styled.h2`
-  font-size: 16px;
+  font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
-  background-color: #e6e6e6;
-  border-radius: 20px;
-  height: 30px;
-  padding: 2%;
-`;
-
-const TaskInputs = styled.div`
-  display: flex;
-  gap: 15px;
-  margin-bottom: 20px;
-`;
-
-const InputWrapper = styled.div`
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  display: flex;
-  border-radius: 20px;
-  background-color: white;
-  padding: 1%;
 `;
 
 const InputLabel = styled.label`
@@ -77,14 +55,6 @@ const InputLabel = styled.label`
   font-size: 12px;
   margin-bottom: 5px;
   color: #666;
-`;
-
-const Textbox = styled.p`
-  box-sizing: border-box;
-  border: none;
-  background-color: transparent;
-  font-size: 11px;
-  width: 44px;
 `;
 
 const FocusLabel = styled.div`
@@ -104,31 +74,41 @@ const NormalTextbox = styled.p`
   border-radius: 5px;
 `;
 
+const ButtonLayout = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+`;
+
+const LinkButton = styled(Link)`
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  margin-left: auto;
+  text-decoration: none;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
 
 const AssignmentList = () => {
-  const { teamId } = useParams() ?? 1;
-  const {data}= useGetWeek(teamId);
-  console.log(data);
-
-  const { mutate, isPending, isError, error } = usePostAssignment();
-  const [task, setTask] = useState<SettingInterface>({
-    name: "",
-    groupId: Number(teamId),
-    focusOne: "",
-    focusTwo: "",
-    focusThree: "",
-  });
-
-  console.log(mutate)
-  const [num, setNum] = useState(1);
+  const {teamId} = useParams() ?? 1;
+  const {data, isPending, isError, error} = useGetWeek(Number(teamId));
 
 
   if (isError) {
-    alert(error.message);
+    alert(error?.message);
   }
 
   if (isPending) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner/>;
   }
 
   return (
@@ -136,39 +116,25 @@ const AssignmentList = () => {
       <Header>
         <Title>과제</Title>
         <Description>배운 내용을 AI에게 설명하며 복습해보세요</Description>
-        </Header>
-      <TaskCard>
-        <TaskTitle
-          value={task.name}
-          placeholder="그 주차에 배운 내용을 AI에게 설명해 주세요"
-        ></TaskTitle>
+      </Header>
+      {data && data.length === 0 && (<NoContents message='과제가 없습니다' />)}
+      {data && data.map((task: SettingInterface) => (
+        <TaskCard>
+          <TaskTitle>{task.name}</TaskTitle>
 
-        <TaskInputs>
-          <InputWrapper>
-            <InputLabel>응답 횟수 제한</InputLabel>
-            <Textbox>횟수</Textbox>
-          </InputWrapper>
-          <InputWrapper>
-            <InputLabel>글자수 제한</InputLabel>
-            <Textbox>자</Textbox>
-          </InputWrapper>
-          <InputWrapper>
-            <InputLabel>마감일</InputLabel>
-            <Textbox>월 일</Textbox>
-          </InputWrapper>
-        </TaskInputs>
+          <FocusLabel>
+            <InputLabel>학습 중점 사항</InputLabel>
+          </FocusLabel>
 
-        <FocusLabel>
-          <InputLabel>학습 중점 사항</InputLabel>
-        </FocusLabel>
-        <NormalTextbox value={task.focusOne} />
-        {num >= 2 && (
-          <NormalTextbox value={task.focusTwo} />
-        )}
-        {num >= 3 && (
-          <NormalTextbox value={task.focusThree} />
-        )}
-      </TaskCard>
+          {task.focusOne && (<NormalTextbox>{task.focusOne}</NormalTextbox>)}
+          {task.focusTwo && (<NormalTextbox>{task.focusTwo}</NormalTextbox>)}
+          {task.focusThree && (<NormalTextbox>{task.focusThree}</NormalTextbox>)}
+
+          <ButtonLayout>
+            <LinkButton to={`/chatting/${teamId}`}>시작하기</LinkButton>
+          </ButtonLayout>
+        </TaskCard>
+      ))}
 
     </Container>
   );

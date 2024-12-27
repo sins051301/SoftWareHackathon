@@ -1,4 +1,7 @@
 import styled from 'styled-components';
+import { isClassOwner } from '../../utils/auth';
+import InsiteCard from "@/components/InsiteCard";
+import { EvaluateResponse } from "@/types/EvaluateInterface";
 
 interface BarProps {
   height: number;
@@ -62,6 +65,24 @@ const Bar = styled.div<BarProps>`
 `;
 
 const Feedbacks = () => {
+  if (isClassOwner()) {
+    const evaluateResponseDummyData: EvaluateResponse = {
+      output: {
+        score: ["8.125", "7.25", "8.375"],
+        insight:
+          "평균 점수 분석 결과, 학생들은 큐의 기본 개념과 \"선입선출(FIFO)\" 원칙을 잘 이해하고 있는 것으로 보입니다. 특히, 큐의 주요 기능인 enqueue와 dequeue의 작동 방식에 대한 이해가 명확하며, 큐가 다양한 자료 구조와 알고리즘에서 어떻게 활용되는지에 대해 인식하고 있습니다. 그러나, 많은 학생들이 큐의 구현 방법이나 원형 큐와 같은 변형에 대한 이해가 부족하며, 큐의 실제 응용 사례에 대한 구체적인 설명을 잘 하지 못했습니다. 교육 솔루션은 큐의 다양한 구현 방식과 응용 예시를 포함한 심화 학습 자료를 제공하고, 큐를 이용한 문제 해결 능력을 향상시키는 데 중점을 두어야 합니다. 이를 통해 학생들이 큐 자료 구조에 대한 보다 깊이 있고 체계적인 이해를 얻을 수 있을 것입니다.",
+      },
+      metadata: {
+        run_id: "c2ee2256-f1d3-4f07-9004-76c11312f465",
+        feedback_tokens: [],
+      },
+    };
+
+    return (
+      <InsiteCard data={evaluateResponseDummyData} />
+    )
+  }
+
   return (
     <Container>
       <Title>과제 결과</Title>
